@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block body_class %}login-page{% endblock %}
+{% block main_class %}login-container{% endblock %}
+
+{% block content %}
+<div class="login-dialog">
+  <h1>{{ _('login') }}</h1>
+  <form method="post">
+    <label>{{ _('username') }} <input type="text" name="username"></label><br>
+    <label>{{ _('password') }} <input type="password" name="password"></label><br>
+    <button type="submit">{{ _('login') }}</button>
+  </form>
+  <p>{{ _('new_user') }} <a href="{{ url_for('auth.register') }}">{{ _('register_here') }}</a></p>
+</div>
+{% endblock %}

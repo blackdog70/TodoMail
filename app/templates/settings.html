@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ _('settings') }}</h1>
+
+<ul>
+  {% for s in servers %}
+    <li>{{ s.protocol|upper }} - {{ s.server }}:{{ s.port }} - {{ s.username }}</li>
+  {% else %}
+    <li>{{ _('no_servers') }}</li>
+  {% endfor %}
+</ul>
+
+<form method="post" id="server-form">
+  <label>{{ _('protocol') }}
+    <select name="protocol">
+      <option value="imap">{{ _('imap') }}</option>
+      <option value="pop3">{{ _('pop3') }}</option>
+    </select>
+  </label>
+  <label>{{ _('server') }}<input name="server" required></label>
+  <label>{{ _('port') }}<input name="port" required></label>
+  <label>{{ _('username') }}<input name="username"></label>
+  <label>{{ _('password') }}<input name="password" type="password"></label>
+  <button type="button" onclick="testConnection()">{{ _('test_connection') }}</button>
+  <button type="submit">{{ _('add_server') }}</button>
+</form>
+
+<script>
+function testConnection() {
+  const form = document.getElementById('server-form');
+  const data = {
+    protocol: form.protocol.value,
+    server: form.server.value,
+    port: form.port.value,
+    username: form.username.value,
+    password: form.password.value
+  };
+  fetch('{{ url_for('main.test_mail') }}', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  }).then(r => r.json()).then(res => {
+    alert(res.success ? '{{ _('connection_success') }}' : '{{ _('connection_failed') }}');
+  });
+}
+</script>
+{% endblock %}
